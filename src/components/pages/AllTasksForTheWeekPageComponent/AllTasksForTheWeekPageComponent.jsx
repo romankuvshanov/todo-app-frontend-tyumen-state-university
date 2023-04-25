@@ -16,13 +16,12 @@ export default function AllTasksForTheWeekPageComponent() {
     for (let day in weeklyTasks) {
       if (weeklyTasks[day].length > rows) {
         tableCells.push(
-          <td className={"td-tasked"}>
+          <td className={"td-tasked"} key={weeklyTasks[day][rows].taskId}>
             <Link
               className={"td-tasked-title"}
               to={"/changeTask"}
               state={{
-                mode: "editing",
-                taskTitle: weeklyTasks[day][rows].taskTitle,
+                task: weeklyTasks[day][rows],
               }}
             >
               {weeklyTasks[day][rows].taskTitle}
@@ -30,10 +29,10 @@ export default function AllTasksForTheWeekPageComponent() {
           </td>
         );
       } else {
-        tableCells.push(<td></td>);
+        tableCells.push(<td key={rows + day}></td>);
       }
     }
-    tableRows.push(<tr>{tableCells}</tr>);
+    tableRows.push(<tr key={rows}>{tableCells}</tr>);
   }
 
   return (

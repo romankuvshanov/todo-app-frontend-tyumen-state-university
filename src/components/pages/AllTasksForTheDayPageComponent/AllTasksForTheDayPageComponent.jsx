@@ -24,8 +24,7 @@ export default function AllTasksForTheDayPageComponent() {
         .map((task) => {
           return (
             <TaskComponent
-              title={task.taskTitle}
-              datetime={task.scheduledTime}
+              task={task}
               key={task.taskId}
             ></TaskComponent>
           );

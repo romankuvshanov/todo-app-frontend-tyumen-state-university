@@ -1,14 +1,12 @@
 import NavHeaderComponent from "../../uiElements/NavHeaderComponent/NavHeaderComponent";
 import FormInputComponent from "../../uiElements/FormInputComponent/FormInputComponent";
 import ButtonComponent from "../../uiElements/ButtonComponent/ButtonComponent";
-import './NewTaskPageComponent.scss';
+import "./NewTaskPageComponent.scss";
 
 export default function NewTaskPageComponent() {
   return (
     <>
-      <NavHeaderComponent>
-          Добавить новую задачу
-      </NavHeaderComponent>
+      <NavHeaderComponent>Добавить новую задачу</NavHeaderComponent>
       <form className={"from"}>
         <FormInputComponent
           title={"Задача"}
@@ -30,11 +28,21 @@ export default function NewTaskPageComponent() {
             required: true,
           }}
         ></FormInputComponent>
-        <label className={'is-done-label'}>
-            Выполнено
-          <input className={'is-done-input'} id={"input-is-done"} name={"is-done"} type={"checkbox"} />
+        <label className={"is-done-label"}>
+          Выполнено
+          <input
+            className={"is-done-input"}
+            id={"input-is-done"}
+            name={"is-done"}
+            type={"checkbox"}
+          />
         </label>
-        <ButtonComponent type={"submit"} title={"Сохранить"}></ButtonComponent>
+        <div className={"button-container"}>
+          <ButtonComponent
+            type={"submit"}
+            title={"Сохранить"}
+          ></ButtonComponent>
+        </div>
       </form>
     </>
   );

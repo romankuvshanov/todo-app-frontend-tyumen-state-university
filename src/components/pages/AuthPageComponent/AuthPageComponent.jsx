@@ -54,12 +54,13 @@ export default function AuthPageComponent() {
           Логин и/или пароль не правильны. Пожалуйста, попробуйте, снова.
         </p>
       )}
-
-      <ButtonComponent
-        onClick={() => setLoginWasNotSuccessful(false)}
-        type={"submit"}
-        title={"Войти"}
-      ></ButtonComponent>
+      <div className={'button-container'}>
+        <ButtonComponent
+          onClick={() => setLoginWasNotSuccessful(false)}
+          type={"submit"}
+          title={"Войти"}
+        ></ButtonComponent>
+      </div>
     </form>
   );
 }

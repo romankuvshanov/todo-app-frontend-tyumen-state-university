@@ -1,0 +1,19 @@
+.nav-header-container {
+  display: grid;
+  grid-template-columns: 1fr 10fr 1fr;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.nav-header-container__link {
+  color: black;
+  text-decoration: none;
+  font-size: 1.5em;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.nav-header-container__headline {
+  justify-self: center;
+}

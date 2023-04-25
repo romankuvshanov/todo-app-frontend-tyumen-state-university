@@ -1,9 +1,9 @@
-import NavHeaderComponent from "../NavHeaderComponent/NavHeaderComponent";
-import "./AllTasksForTheWeek.scss";
+import NavHeaderComponent from "../../uiElements/NavHeaderComponent/NavHeaderComponent";
+import "./AllTasksForTheWeekPageComponent.scss";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function AllTasksForTheWeek() {
+export default function AllTasksForTheWeekPageComponent() {
   const [currentWeek, setCurrentWeek] = useState(
     `${new Date(Date.now()).getFullYear()}-W${getWeekNumber(
       new Date(Date.now())
@@ -19,7 +19,7 @@ export default function AllTasksForTheWeek() {
           <td className={"td-tasked"}>
             <Link
               className={"td-tasked-title"}
-              to={"/task"}
+              to={"/changeTask"}
               state={{
                 mode: "editing",
                 taskTitle: weeklyTasks[day][rows].taskTitle,
@@ -38,7 +38,7 @@ export default function AllTasksForTheWeek() {
 
   return (
     <>
-      <NavHeaderComponent to={"/menu"}>
+      <NavHeaderComponent>
         Задачи на {getWeekStartAndEndString(currentWeek)}
       </NavHeaderComponent>
       <p>

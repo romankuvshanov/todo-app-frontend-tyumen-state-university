@@ -1,17 +1,15 @@
-import NavHeaderComponent from "../NavHeaderComponent/NavHeaderComponent";
-import FormInputComponent from "../FormInputComponent/FormInputComponent";
-import ButtonComponent from "../ButtonComponent/ButtonComponent";
-import './Task.scss';
-import {useLocation} from "react-router-dom";
+import NavHeaderComponent from "../../uiElements/NavHeaderComponent/NavHeaderComponent";
+import FormInputComponent from "../../uiElements/FormInputComponent/FormInputComponent";
+import ButtonComponent from "../../uiElements/ButtonComponent/ButtonComponent";
+import "./ChangeTaskPageComponent.scss";
+import { useLocation } from "react-router-dom";
 
-export default function Task({mode = 'adding', taskId, taskTitle, scheduledTime, isCompleted}) {
-    // const location = useLocation();
-    // const from = location.state;
+export default function ChangeTaskPageComponent() {
+  const location = useLocation();
+  const from = location.state;
   return (
     <>
-      <NavHeaderComponent to={"/menu"}>
-          {mode === 'editing' ? 'Изменить' : 'Добавить новую'} задачу
-      </NavHeaderComponent>
+      <NavHeaderComponent>Изменить задачу</NavHeaderComponent>
       <form className={"from"}>
         <FormInputComponent
           title={"Задача"}
@@ -33,9 +31,14 @@ export default function Task({mode = 'adding', taskId, taskTitle, scheduledTime,
             required: true,
           }}
         ></FormInputComponent>
-        <label className={'is-done-label'}>
-            Выполнено
-          <input className={'is-done-input'} id={"input-is-done"} name={"is-done"} type={"checkbox"} />
+        <label className={"is-done-label"}>
+          Выполнено
+          <input
+            className={"is-done-input"}
+            id={"input-is-done"}
+            name={"is-done"}
+            type={"checkbox"}
+          />
         </label>
         <ButtonComponent type={"submit"} title={"Сохранить"}></ButtonComponent>
       </form>

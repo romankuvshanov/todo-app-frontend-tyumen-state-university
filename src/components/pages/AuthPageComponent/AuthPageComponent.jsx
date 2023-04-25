@@ -1,10 +1,10 @@
-import "./AuthComponent.scss";
-import FormInputComponent from "../FormInputComponent/FormInputComponent";
-import ButtonComponent from "../ButtonComponent/ButtonComponent";
+import "./AuthPageComponent.scss";
+import FormInputComponent from "../../uiElements/FormInputComponent/FormInputComponent";
+import ButtonComponent from "../../uiElements/ButtonComponent/ButtonComponent";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export default function AuthComponent() {
+export default function AuthPageComponent() {
   const navigate = useNavigate();
   const [loginWasNotSuccessful, setLoginWasNotSuccessful] = useState(false);
 

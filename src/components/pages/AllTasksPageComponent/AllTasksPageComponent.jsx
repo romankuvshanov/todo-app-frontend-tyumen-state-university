@@ -1,24 +1,11 @@
-import NavHeaderComponent from "../NavHeaderComponent/NavHeaderComponent";
-import TaskComponent from "../TaskComponent/TaskComponent";
-import "./AllTasksForTheDay.scss";
-import { useState } from "react";
+import "./AllTasksPageComponent.scss";
+import NavHeaderComponent from "../../uiElements/NavHeaderComponent/NavHeaderComponent";
+import TaskComponent from "../../uiElements/TaskComponent/TaskComponent";
 
-export default function AllTasksForTheDay() {
-  const [currentDay, setCurrentDay] = useState(Date.now());
-
+export default function AllTasksPageComponent() {
   return (
     <>
-      <NavHeaderComponent to={"/menu"}>
-        Все задачи на{" "}
-        <input
-          id={"current-date"}
-          name={"current-date"}
-          className={"current-date"}
-          type={"date"}
-          value={new Date(currentDay).toLocaleDateString("en-CA")}
-          onChange={(e) => setCurrentDay(e.target.value)}
-        />
-      </NavHeaderComponent>
+      <NavHeaderComponent>Все задачи</NavHeaderComponent>
       {tasks
         .filter((task) => !task.isCompleted)
         .map((task) => {

@@ -11,15 +11,30 @@ export default function AuthPageComponent() {
   function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
-    if (
-      formData.get("login") === "admin" &&
-      formData.get("password") === "admin"
-    ) {
-      setLoginWasNotSuccessful(false);
-      navigate("/menu", { replace: true });
-    } else {
-      setLoginWasNotSuccessful(true);
-    }
+
+    fetch("https://localhost:7143/api/Auth/Login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({
+        login: formData.get("login"),
+        password: formData.get("password"),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.result === "success") {
+          setLoginWasNotSuccessful(false);
+          navigate("/menu", { replace: true, state: {token: data?.token} });
+        } else {
+          setLoginWasNotSuccessful(true);
+        }
+      })
+      .catch((error) => {
+        setLoginWasNotSuccessful(true);
+      });
   }
 
   return (
@@ -54,7 +69,7 @@ export default function AuthPageComponent() {
           Логин и/или пароль не правильны. Пожалуйста, попробуйте, снова.
         </p>
       )}
-      <div className={'button-container'}>
+      <div className={"button-container"}>
         <ButtonComponent
           onClick={() => setLoginWasNotSuccessful(false)}
           type={"submit"}

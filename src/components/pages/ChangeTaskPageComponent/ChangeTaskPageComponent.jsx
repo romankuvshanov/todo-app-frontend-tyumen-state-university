@@ -2,16 +2,57 @@ import NavHeaderComponent from "../../uiElements/NavHeaderComponent/NavHeaderCom
 import FormInputComponent from "../../uiElements/FormInputComponent/FormInputComponent";
 import ButtonComponent from "../../uiElements/ButtonComponent/ButtonComponent";
 import "./ChangeTaskPageComponent.scss";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toIsoString } from "../../../common/common";
 
 export default function ChangeTaskPageComponent() {
   const location = useLocation();
   const from = location.state;
 
+  const navigate = useNavigate();
+
   const [taskTitle, setTaskTitle] = useState(from?.task?.taskTitle);
   const [dateTime, setDateTime] = useState(from?.task?.scheduledTime);
   const [isDone, setIsDone] = useState(from?.task?.isCompleted);
+
+  console.log(from?.token);
+
+  function handleDeleteTask() {
+    fetch(`https://localhost:7143/api/Data/deleteTask/1/${from?.task?.id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization:
+        from?.token,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        navigate(-1);
+      });
+  }
+
+  function handleChangeTask() {
+    fetch(`https://localhost:7143/api/Data/updateTask/1/${from?.task?.id}`, {
+      method: "PUT",
+      headers: {
+        Authorization:
+        from?.token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        taskTitle: taskTitle,
+        isCompleted: isDone || false,
+        scheduledTime: dateTime,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        navigate(-1);
+      });
+  }
 
   return (
     <>
@@ -37,7 +78,7 @@ export default function ChangeTaskPageComponent() {
             name: "datetime",
             type: "datetime-local",
             required: true,
-            value: dateTimeStringToHtmlDateTimeString(dateTime),
+            value: dateTime,
             onChange: (e) => setDateTime(e.target.value),
           }}
         ></FormInputComponent>
@@ -57,10 +98,12 @@ export default function ChangeTaskPageComponent() {
             type={"button"}
             title={"Удалить задачу"}
             color={'red'}
+            onClick={handleDeleteTask}
           ></ButtonComponent>
           <ButtonComponent
-            type={"submit"}
+            type={"button"}
             title={"Сохранить"}
+            onClick={handleChangeTask}
           ></ButtonComponent>
         </div>
       </form>

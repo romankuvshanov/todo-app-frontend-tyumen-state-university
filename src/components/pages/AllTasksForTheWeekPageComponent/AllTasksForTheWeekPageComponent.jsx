@@ -1,7 +1,7 @@
 import NavHeaderComponent from "../../uiElements/NavHeaderComponent/NavHeaderComponent";
 import "./AllTasksForTheWeekPageComponent.scss";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 export default function AllTasksForTheWeekPageComponent() {
   const [currentWeek, setCurrentWeek] = useState(
@@ -9,27 +9,64 @@ export default function AllTasksForTheWeekPageComponent() {
       new Date(Date.now())
     )}`
   );
+  const [data, setData] = useState([]);
+  const { state } = useLocation();
+  console.log(state?.token);
+
+  useEffect(() => {
+    fetch(
+      `https://localhost:7143/api/Data/allTasksByWeek/1/${getWeekStartAndEndString(
+        currentWeek
+      ).slice(0, 10)}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: state?.token,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data);
+        console.log(data);
+      });
+  }, [currentWeek]);
 
   const tableRows = [];
-  for (let rows = 0; rows < getWeekTasksDepth(weeklyTasks); rows++) {
+  for (let rows = 0; rows < getWeekTasksDepth(data); rows++) {
     const tableCells = [];
-    for (let day in weeklyTasks) {
-      if (weeklyTasks[day].length > rows) {
+
+    const week = currentWeek.split("-")[1].slice(1);
+    const year = currentWeek.split("-")[0];
+    const nextMonday = getDateOfISOWeek(week, year);
+
+    for (let i = 0; i < 7; i++) {
+      nextMonday.setDate(nextMonday.getDate() + 1);
+      if (
+        data.hasOwnProperty(nextMonday.toISOString().slice(0, 10)) &&
+        data[nextMonday.toISOString().slice(0, 10)].length > rows
+      ) {
         tableCells.push(
-          <td className={"td-tasked"} key={weeklyTasks[day][rows].taskId}>
+          <td
+            className={"td-tasked"}
+            key={data[nextMonday.toISOString().slice(0, 10)][rows].id}
+          >
             <Link
               className={"td-tasked-title"}
               to={"/changeTask"}
               state={{
-                task: weeklyTasks[day][rows],
+                task: data[nextMonday.toISOString().slice(0, 10)][rows],
+                token: state?.token
               }}
             >
-              {weeklyTasks[day][rows].taskTitle}
+              {data[nextMonday.toISOString().slice(0, 10)][rows].taskTitle}
             </Link>
           </td>
         );
       } else {
-        tableCells.push(<td key={rows + day}></td>);
+        tableCells.push(
+          <td key={rows + nextMonday.toISOString().slice(0, 10)}></td>
+        );
       }
     }
     tableRows.push(<tr key={rows}>{tableCells}</tr>);
@@ -50,20 +87,24 @@ export default function AllTasksForTheWeekPageComponent() {
           onChange={(e) => setCurrentWeek(e.target.value)}
         />
       </p>
-      <table className={"calendar"}>
-        <thead>
-          <tr>
-            <th>Пн</th>
-            <th>Вт</th>
-            <th>Ср</th>
-            <th>Чт</th>
-            <th>Пт</th>
-            <th>Сб</th>
-            <th>Вс</th>
-          </tr>
-        </thead>
-        <tbody>{tableRows}</tbody>
-      </table>
+      {Object.keys(data).length === 0 ? (
+        <p className={"no-tasks-paragraph"}>Задач на эту неделю нет</p>
+      ) : (
+        <table className={"calendar"}>
+          <thead>
+            <tr>
+              <th>Пн</th>
+              <th>Вт</th>
+              <th>Ср</th>
+              <th>Чт</th>
+              <th>Пт</th>
+              <th>Сб</th>
+              <th>Вс</th>
+            </tr>
+          </thead>
+          <tbody>{tableRows}</tbody>
+        </table>
+      )}
     </>
   );
 }
@@ -100,6 +141,24 @@ function getWeekTasksDepth(weeklyTasks) {
   }
   return result;
 }
+
+function enrichWeekTasksObjectWithEmptyDays(weekTasks, weekString) {
+  const weekTasksClone = structuredClone(weekTasks);
+  const week = weekString.split("-")[1].slice(1);
+  const year = weekString.split("-")[0];
+  const nextMonday = getDateOfISOWeek(week, year);
+
+  for (let i = 0; i < 7; i++) {
+    nextMonday.setDate(nextMonday.getDate() + 1);
+    if (!weekTasksClone.hasOwnProperty(nextMonday.toISOString().slice(0, 10))) {
+      weekTasksClone[nextMonday.toISOString().slice(0, 10)] = [];
+    }
+  }
+
+  return weekTasksClone;
+}
+
+// TODO: Добавить токена передачу
 
 const weeklyTasks = {
   "24.04.2023": [

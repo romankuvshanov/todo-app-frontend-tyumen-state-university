@@ -66,7 +66,7 @@ export default function AuthPageComponent() {
 
       {loginWasNotSuccessful && (
         <p className={`auth-component__error-message`}>
-          Логин и/или пароль не правильны. Пожалуйста, попробуйте, снова.
+          Логин и/или пароль неверны. Пожалуйста, попробуйте снова.
         </p>
       )}
       <div className={"button-container"}>
